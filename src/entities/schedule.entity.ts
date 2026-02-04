@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, JoinColumn , PrimaryGeneratedColumn } from 'typeorm';
 import { Room } from './room.entity';
 
 /**
@@ -83,6 +83,7 @@ export class Schedule {
 
   // Relationships
   @ManyToOne(() => Room, (room) => room.schedules, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'room_id' })
   room: Room;
 
   @Column({ default: false })
