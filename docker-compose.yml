@@ -1,13 +1,37 @@
 version: '3.8'
 
 services:
+  app:
+    build: .
+    container_name: empty-room-api
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      DB_NAME: ${POSTGRES_DB:-empty_room_db}
+      DB_SYNC: "false"
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_TTL: 300
+      NODE_ENV: production
+      PORT: 3000
+      CORS_ORIGIN: "*"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   postgres:
     image: postgres:15-alpine
     container_name: empty-room-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: empty_room_db
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-empty_room_db}
     ports:
       - "5432:5432"
     volumes:
