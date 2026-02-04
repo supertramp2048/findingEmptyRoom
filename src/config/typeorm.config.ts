@@ -7,32 +7,24 @@ import { Schedule } from '../entities/schedule.entity';
 
 @Injectable()
 export class TypeOrmConfigService {
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) { }
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     const nodeEnv = this.configService.get('NODE_ENV', 'development');
+    const databaseUrl = this.configService.get<string>('DATABASE_URL');
+
+    if (!databaseUrl) {
+      throw new Error('DATABASE_URL is not defined');
+    }
+
     return {
       type: 'postgres',
-      host: this.configService.get('DB_HOST', 'localhost'),
-      port: this.configService.get('DB_PORT', 5432),
-      username: this.configService.get('DB_USERNAME', 'postgres'),
-      password: this.configService.get('DB_PASSWORD', 'password'),
-      database: this.configService.get('DB_NAME', 'empty_room_db'),
+      url: databaseUrl, // ✅ DÙNG URL
       entities: [Building, Room, Schedule],
       synchronize: false,
       logging: nodeEnv === 'development',
-      dropSchema: false,
-      migrationsRun: false,
-      ssl: nodeEnv === 'production' && this.configService.get('DB_HOST') !== 'postgres' 
-        ? { rejectUnauthorized: false } 
-        : false,
-      extra: {
-        statement_timeout: 30000,
-        connectionTimeoutMillis: 20000,
-        idleTimeoutMillis: 30000,
-        family: 4,
-        keepalives: 1,
-        keepalives_idle: 30,
+      ssl: {
+        rejectUnauthorized: false,
       },
       retryAttempts: 10,
       retryDelay: 3000,
