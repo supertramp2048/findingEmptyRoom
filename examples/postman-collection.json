@@ -1,0 +1,290 @@
+/**
+ * Postman Collection Examples
+ *
+ * Import vào Postman để test API
+ */
+
+{
+  "info": {
+    "name": "Empty Room Filter API",
+    "description": "API để tìm phòng học trống",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Schedule",
+      "item": [
+        {
+          "name": "Upload Schedule (Excel)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "<Select your Excel file>"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/schedule/upload",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "schedule", "upload"]
+            },
+            "description": "Upload Excel file chứa thời khóa biểu"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": ""
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "http://localhost:3000/api/schedule/upload",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "schedule", "upload"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Schedule imported successfully\",\n  \"rows_imported\": 150\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Schedule Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/schedule/stats",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "schedule", "stats"]
+            },
+            "description": "Lấy thông tin stats về schedule"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/schedule/stats",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "schedule", "stats"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total_schedules\": 150,\n  \"total_buildings\": 3,\n  \"total_rooms\": 25\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "Find Available Rooms",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/rooms/available?thu=3&tiet_bd=4&tiet_kt=6&building=A1&min_continuous=2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "rooms", "available"],
+              "query": [
+                {
+                  "key": "thu",
+                  "value": "3",
+                  "description": "Day of week (2-7, 2=Monday)"
+                },
+                {
+                  "key": "tiet_bd",
+                  "value": "4",
+                  "description": "Start session"
+                },
+                {
+                  "key": "tiet_kt",
+                  "value": "6",
+                  "description": "End session"
+                },
+                {
+                  "key": "building",
+                  "value": "A1",
+                  "description": "Building code (A1, A2, B1, ...)"
+                },
+                {
+                  "key": "min_continuous",
+                  "value": "2",
+                  "description": "Minimum continuous empty sessions"
+                }
+              ]
+            },
+            "description": "Tìm phòng trống dựa trên điều kiện"
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:3000/api/rooms/available?thu=3&tiet_bd=4&tiet_kt=6&building=A1&min_continuous=2",
+                  "protocol": "http",
+                  "host": ["localhost"],
+                  "port": "3000",
+                  "path": ["api", "rooms", "available"],
+                  "query": [
+                    {
+                      "key": "thu",
+                      "value": "3"
+                    },
+                    {
+                      "key": "tiet_bd",
+                      "value": "4"
+                    },
+                    {
+                      "key": "tiet_kt",
+                      "value": "6"
+                    },
+                    {
+                      "key": "building",
+                      "value": "A1"
+                    },
+                    {
+                      "key": "min_continuous",
+                      "value": "2"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"thu\": 3,\n  \"tiet\": \"4-6\",\n  \"building\": \"A1\",\n  \"rooms\": [\n    {\n      \"room\": \"301\",\n      \"continuous_slots\": [4, 5]\n    },\n    {\n      \"room\": \"302\",\n      \"continuous_slots\": [4, 5, 6]\n    },\n    {\n      \"room\": \"303\",\n      \"continuous_slots\": [5, 6]\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Find Available - Monday (Thứ 2)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/rooms/available?thu=2&tiet_bd=7&tiet_kt=9&building=B1&min_continuous=3",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "rooms", "available"],
+              "query": [
+                {
+                  "key": "thu",
+                  "value": "2"
+                },
+                {
+                  "key": "tiet_bd",
+                  "value": "7"
+                },
+                {
+                  "key": "tiet_kt",
+                  "value": "9"
+                },
+                {
+                  "key": "building",
+                  "value": "B1"
+                },
+                {
+                  "key": "min_continuous",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "Ví dụ: Thứ 2, tiết 7-9, tòa B1, 3 tiết trống liên tục"
+          },
+          "response": []
+        },
+        {
+          "name": "Find Available - Friday (Thứ 6)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/rooms/available?thu=6&tiet_bd=1&tiet_kt=4&building=A2&min_continuous=2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "rooms", "available"],
+              "query": [
+                {
+                  "key": "thu",
+                  "value": "6"
+                },
+                {
+                  "key": "tiet_bd",
+                  "value": "1"
+                },
+                {
+                  "key": "tiet_kt",
+                  "value": "4"
+                },
+                {
+                  "key": "building",
+                  "value": "A2"
+                },
+                {
+                  "key": "min_continuous",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "Ví dụ: Thứ 6, tiết 1-4, tòa A2, 2 tiết trống liên tục"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
