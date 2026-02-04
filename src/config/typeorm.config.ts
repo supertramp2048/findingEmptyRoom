@@ -19,12 +19,16 @@ export class TypeOrmConfigService {
       password: this.configService.get('DB_PASSWORD', 'password'),
       database: this.configService.get('DB_NAME', 'empty_room_db'),
       entities: [Building, Room, Schedule],
-      synchronize: false, // Set to false to use migrations instead
+      synchronize: false,
       logging: nodeEnv === 'development',
       dropSchema: false,
-      migrationsRun: false, // NestJS won't auto-run migrations
+      migrationsRun: false,
       ssl: nodeEnv === 'production' ? { rejectUnauthorized: false } : false,
-      connectTimeoutMS: 10000,
+      extra: {
+        connectionTimeoutMillis: 10000,
+        idleTimeoutMillis: 30000,
+        family: 4, // Force IPv4
+      },
     };
   }
 }
