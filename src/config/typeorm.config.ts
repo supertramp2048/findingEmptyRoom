@@ -21,7 +21,7 @@ export class TypeOrmConfigService {
       type: 'postgres',
       url: databaseUrl, // ✅ DÙNG URL
       entities: [Building, Room, Schedule],
-      synchronize: false,
+      synchronize: process.env.DB_SYNC === 'true',
       logging: nodeEnv === 'development',
       ssl: {
         rejectUnauthorized: false,
