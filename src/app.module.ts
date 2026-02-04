@@ -10,7 +10,7 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
     // Load environment variables
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: process.env.NODE_ENV === 'development' ? '.env.local' : '.env',
     }),
 
     // Database

@@ -23,7 +23,9 @@ export class TypeOrmConfigService {
       logging: nodeEnv === 'development',
       dropSchema: false,
       migrationsRun: false,
-      ssl: nodeEnv === 'production' ? { rejectUnauthorized: false } : false,
+      ssl: nodeEnv === 'production' && this.configService.get('DB_HOST') !== 'postgres' 
+        ? { rejectUnauthorized: false } 
+        : false,
       extra: {
         statement_timeout: 30000,
         connectionTimeoutMillis: 20000,
