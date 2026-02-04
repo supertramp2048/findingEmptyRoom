@@ -10,6 +10,7 @@ export class TypeOrmConfigService {
   constructor(private configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
+    const nodeEnv = this.configService.get('NODE_ENV', 'development');
     return {
       type: 'postgres',
       host: this.configService.get('DB_HOST', 'localhost'),
@@ -19,9 +20,11 @@ export class TypeOrmConfigService {
       database: this.configService.get('DB_NAME', 'empty_room_db'),
       entities: [Building, Room, Schedule],
       synchronize: false, // Set to false to use migrations instead
-      logging: this.configService.get('NODE_ENV') === 'development',
+      logging: nodeEnv === 'development',
       dropSchema: false,
       migrationsRun: false, // NestJS won't auto-run migrations
+      ssl: nodeEnv === 'production' ? { rejectUnauthorized: false } : false,
+      connectTimeoutMS: 10000,
     };
   }
 }
