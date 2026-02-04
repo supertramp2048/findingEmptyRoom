@@ -25,10 +25,15 @@ export class TypeOrmConfigService {
       migrationsRun: false,
       ssl: nodeEnv === 'production' ? { rejectUnauthorized: false } : false,
       extra: {
-        connectionTimeoutMillis: 10000,
+        statement_timeout: 30000,
+        connectionTimeoutMillis: 20000,
         idleTimeoutMillis: 30000,
-        family: 4, // Force IPv4
+        family: 4,
+        keepalives: 1,
+        keepalives_idle: 30,
       },
+      retryAttempts: 10,
+      retryDelay: 3000,
     };
   }
 }
